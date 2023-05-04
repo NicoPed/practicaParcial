@@ -48,6 +48,8 @@ int sacarTiempoAsociado(sNodo *lista);
 sNodo* copiarNodo(sNodo* nodoACopiar);
 sNodo* copiarNodoPuntero(sNodo* nodoAcopiar);
 
+void ordenarPorId(sNodo ** lista);
+
 int main (){
     char buffer[MAX],*clave;
     int cantTareas,duracion,respuesta,id = 0, opcionCase2,idAux,opcionLista, posicion;
@@ -66,6 +68,7 @@ int main (){
         printf("\n4- Mostrar Tareas En proceso");
         printf("\n5- Mostrar Tareas Realizadas");
         printf("\n6- Copiar Tarea");
+        printf("\n7- Ordenar por id: ");
         //printf("\n6- Buscar por ID");
         //printf("\n7- Buscar por clave");
         //printf("\n8- Mostrar Datos de una lista");
@@ -217,6 +220,9 @@ int main (){
             }
             
             break;
+        case 7:
+            ordenarPorId(&tareaPendientes);
+            break;
         }
 
         /*if (respuesta == 6 || respuesta == 7)
@@ -261,21 +267,21 @@ void eliminarNodo(sNodo * nodo){
     }
     
 }
-void Eliminar(sNodo ** t, int id){
-    if (*t != NULL)
+void Eliminar(sNodo ** Lista, int id){
+    if (*Lista != NULL)
     {    
         sNodo* aux, *auxAnterior;
-        aux = *t;
-        auxAnterior = *t;
+        aux = *Lista;
+        auxAnterior = *Lista;
 
         while (aux && aux->T.TareaID != id)
         {
             auxAnterior = aux;
             aux = aux->Siguiente;
         }
-        if (aux == *t)
+        if (aux == *Lista)
         {
-            *t = aux->Siguiente;
+            *Lista = aux->Siguiente;
             free(aux->T.Descripcion);
             free(aux);    
         }else{
@@ -335,11 +341,13 @@ sNodo* quitarNodo(sNodo** lista, int id){
         if (aux = *lista)
         {
             *lista = aux->Siguiente;
+            aux->Siguiente = NULL;
             return aux;
         }
         else
         {
             auxAnterior->Siguiente = aux->Siguiente;
+            aux->Siguiente = NULL;
             return aux;
         }
         
@@ -522,6 +530,31 @@ sNodo* copiarNodoPuntero(sNodo* nodoAcopiar){
     mostrarTarea(nuevoNodo->T);
     return nuevoNodo;
     }
+}
+//NO FUNCA
+void ordenarPorId(sNodo ** lista){
+    sNodo *aux = *lista, *auxAnterior = *lista, *auxCambiar;
+
+    while (aux)
+    {
+        if (auxAnterior->T.TareaID > aux->T.TareaID )
+        {
+            printf("\n==ENTRA==");
+            aux = quitarNodo(lista,aux->T.TareaID);
+            aux->Siguiente = NULL;
+            insertarNodo(lista,aux);
+            aux = *lista;
+            auxAnterior = *lista;
+        }
+        else
+        {
+            auxAnterior = aux;
+            aux = aux->Siguiente;
+        }
+        
+    }
+    
+
 }
 //==============================================================================================================================0
 //==============================================================================================================================0
